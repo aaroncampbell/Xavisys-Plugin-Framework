@@ -1,6 +1,6 @@
 <?php
 /**
- * Version: 1.0.1
+ * Version: 1.0.2
  */
 
 if (!class_exists('XavisysPlugin')) {
@@ -119,7 +119,7 @@ if (!class_exists('XavisysPlugin')) {
 				if ( !empty($this->_optionCallbacks[$opt]) && is_callable( $this->_optionCallbacks[$opt] ) ) {
 					$callback = $this->_optionCallbacks[$opt];
 				} else {
-					$this->_optionCallbacks[$opt] = '';
+					$callback = '';
 				}
 				register_setting( $this->_optionGroup, $opt, $callback );
 			}
