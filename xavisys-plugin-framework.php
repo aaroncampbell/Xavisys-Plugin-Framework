@@ -1,6 +1,6 @@
 <?php
 /**
- * Version: 1.0.0
+ * Version: 1.0.1
  */
 
 if (!class_exists('XavisysPlugin')) {
@@ -74,6 +74,9 @@ if (!class_exists('XavisysPlugin')) {
 				$this->_init();
 			}
 			$this->_getSettings();
+			if ( is_callable( array($this, '_postSettingsInit') ) ) {
+				$this->_postSettingsInit();
+			}
 			add_filter( 'init', array( $this, 'init_locale' ) );
 			add_action( 'admin_init', array( $this, 'registerOptions' ) );
 			add_filter( 'plugin_action_links', array( $this, 'addPluginPageLinks' ), 10, 2 );
