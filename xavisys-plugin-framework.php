@@ -1,8 +1,16 @@
 <?php
 /**
- * Version: 1.0.2
+ * Version: 1.0.4
  */
-
+/**
+ * Changelog:
+ *
+ * 1.0.4:
+ *  - Added donate link to the plugin meta
+ *
+ * 1.0.3:
+ *  - Changed to use new cdn for images
+ */
 if (!class_exists('XavisysPlugin')) {
 	/**
 	 * Abstract class XavisysPlugin used as a WordPress Plugin framework
@@ -80,6 +88,7 @@ if (!class_exists('XavisysPlugin')) {
 			add_filter( 'init', array( $this, 'init_locale' ) );
 			add_action( 'admin_init', array( $this, 'registerOptions' ) );
 			add_filter( 'plugin_action_links', array( $this, 'addPluginPageLinks' ), 10, 2 );
+			add_filter( 'plugin_row_meta', array( $this, 'addPluginMetaLinks' ), 10, 2 );
 			add_action( 'admin_menu', array( $this, 'registerOptionsPage' ) );
 			if ( is_callable(array( $this, 'addOptionsMetaBoxes' )) ) {
 				add_action( 'admin_init', array( $this, 'addOptionsMetaBoxes' ) );
@@ -149,7 +158,7 @@ if (!class_exists('XavisysPlugin')) {
 
 		public function registerOptionsPage() {
 			if ( is_callable( array( $this, 'options_page' ) ) ) {
-				add_options_page( $this->_pageTitle, $this->_menuTitle, $this->_accessLevel, $this->_hook, array( $this, 'options_page' ), 'http://static.xavisys.com/xavisys-logo-32.png' );
+				add_options_page( $this->_pageTitle, $this->_menuTitle, $this->_accessLevel, $this->_hook, array( $this, 'options_page' ), 'http://cdn.xavisys.com/logos/xavisys-logo-32.png' );
 			}
 		}
 
@@ -221,11 +230,27 @@ if (!class_exists('XavisysPlugin')) {
 			return $links;
 		}
 
+		public function addPluginMetaLinks( $meta, $file ){
+			if ( $file == $this->_file ) {
+				// Add Widget Page link to our plugin
+				$meta[] = $this->getDonateLink(__('Donate'));
+			}
+			return $meta;
+		}
+
 		public function getSupportForumLink( $linkText = '' ) {
 			if ( empty($linkText) ) {
 				$linkText = __( 'Support Forum', $this->_slug );
 			}
 			return '<a href="' . $this->getSupportForumUrl() . '">' . $linkText . '</a>';
+		}
+
+		public function getDonateLink( $linkText = '' ) {
+			$url = 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=' . $this->_paypalButtonId;
+			if ( empty($linkText) ) {
+				$linkText = __( 'Donate to show your appreciation.', $this->_slug );
+			}
+			return "<a href='{$url}'>{$linkText}</a>";
 		}
 
 		public function getSupportForumUrl() {
@@ -271,10 +296,7 @@ if (!class_exists('XavisysPlugin')) {
 			_e('Give it a good rating on WordPress.org.', $this->_slug);
 			echo "</a></li>";
 
-			$url = 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=' . $this->_paypalButtonId;
-			echo "<li><a href='{$url}'>";
-			_e('Donate to show your appreciation.', $this->_slug);
-			echo "</a></li>";
+			echo '<li>' . $this->getDonateLink() . '</li>';
 
 			echo '</ul>';
 		}
@@ -307,7 +329,7 @@ if (!class_exists('XavisysPlugin')) {
 				'show_summary'	=> 1,
 			);
 			echo '<div class="rss-widget">';
-			echo '<a href="http://xavisys.com"><img class="alignright" src="http://static.xavisys.com/xavisys-logo-small.png" /></a>';
+			echo '<a href="http://xavisys.com"><img class="alignright" src="http://cdn.xavisys.com/logos/xavisys-logo-small.png" /></a>';
 			wp_widget_rss_output( $args );
 			echo '<p style="border-top: 1px solid #CCC; padding-top: 10px; font-weight: bold;">';
 			echo '<a href="http://xavisys.com/feed/"><img src="'.get_bloginfo('wpurl').'/wp-includes/images/rss.png" alt=""/> Subscribe with RSS</a>';
