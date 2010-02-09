@@ -1,9 +1,13 @@
 <?php
 /**
- * Version: 1.0.4
+ * Version: 1.0.5
  */
 /**
  * Changelog:
+ *
+ * 1.0.5:
+ *  - Added XavisysPlugin::_feed_url
+ *  - Changed feed to the feed burner URL because of a redirect issue with 2.9.x
  *
  * 1.0.4:
  *  - Added donate link to the plugin meta
@@ -67,6 +71,12 @@ if (!class_exists('XavisysPlugin')) {
 		 * @var string - The plugin slug used on WordPress.org and/or Xavisys forums
 		 */
 		protected $_slug = '';
+
+		/**
+		 * @var string - The feed URL for Xavisys
+		 */
+		//protected $_feed_url = 'http://xavisys.com/feed/';
+		protected $_feed_url = 'http://feeds.feedburner.com/Xavisys';
 
 		/**
 		 * @var string - The button ID for the PayPal button, override this generic one with a plugin-specific one
@@ -309,7 +319,7 @@ if (!class_exists('XavisysPlugin')) {
 
 		public function xavisysFeedMetaBox() {
 			$args = array(
-				'url'			=> 'http://xavisys.com/feed/',
+				'url'			=> $this->_feed_url,
 				'items'			=> '5',
 			);
 			echo '<div class="rss-widget">';
@@ -323,7 +333,7 @@ if (!class_exists('XavisysPlugin')) {
 
 		public function dashboardWidget() {
 			$args = array(
-				'url'			=> 'http://xavisys.com/feed/',
+				'url'			=> $this->_feed_url,
 				'items'			=> '3',
 				'show_date'		=> 1,
 				'show_summary'	=> 1,
@@ -332,7 +342,7 @@ if (!class_exists('XavisysPlugin')) {
 			echo '<a href="http://xavisys.com"><img class="alignright" src="http://cdn.xavisys.com/logos/xavisys-logo-small.png" /></a>';
 			wp_widget_rss_output( $args );
 			echo '<p style="border-top: 1px solid #CCC; padding-top: 10px; font-weight: bold;">';
-			echo '<a href="http://xavisys.com/feed/"><img src="'.get_bloginfo('wpurl').'/wp-includes/images/rss.png" alt=""/> Subscribe with RSS</a>';
+			echo '<a href="' . $this->_feed_url . '"><img src="'.get_bloginfo('wpurl').'/wp-includes/images/rss.png" alt=""/> Subscribe with RSS</a>';
 			echo "</p>";
 			echo "</div>";
 		}
