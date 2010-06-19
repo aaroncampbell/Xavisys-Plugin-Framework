@@ -1,9 +1,12 @@
 <?php
 /**
- * Version: 1.0.5
+ * Version: 1.0.6
  */
 /**
  * Changelog:
+ *
+ * 1.0.6:
+ *  - Add ability to not have a settings page
  *
  * 1.0.5:
  *  - Added XavisysPlugin::_feed_url
@@ -167,7 +170,7 @@ if (!class_exists('XavisysPlugin')) {
 		}
 
 		public function registerOptionsPage() {
-			if ( is_callable( array( $this, 'options_page' ) ) ) {
+			if ( apply_filters( 'xpf-options_page', true ) && is_callable( array( $this, 'options_page' ) ) ) {
 				add_options_page( $this->_pageTitle, $this->_menuTitle, $this->_accessLevel, $this->_hook, array( $this, 'options_page' ), 'http://cdn.xavisys.com/logos/xavisys-logo-32.png' );
 			}
 		}
